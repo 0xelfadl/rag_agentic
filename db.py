@@ -28,17 +28,24 @@ CREATE INDEX IF NOT EXISTS chunks_embedding_idx
     ON chunks USING hnsw (embedding vector_cosine_ops);
 """
 
+
 def connect():
-    return psycopg.connect(DATABASE_URL);
+    return psycopg.connect(DATABASE_URL)
+
 
 def main():
     with connect() as conn:
         conn.execute(SCHEMA)
-        version = conn.execute("SELECT extversion FROM pg_extension WHERE extname = 'vector'").fetchone()[0]
-        tables= conn.execute("SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename").fetchall()
-    
-    print(f"pgvector {version} is ready")
-    print(f"Tables:", [row[0] for row in tables])
+        version = conn.execute(
+            "SELECT extversion FROM pg_extension WHERE extname = 'vector'"
+        ).fetchone()[0]
+        tables = conn.execute(
+            "SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename"
+        ).fetchall()
 
-if __name__=="__main__":
+    print(f"pgvector {version} is ready")
+    print("Tables:", [row[0] for row in tables])
+
+
+if __name__ == "__main__":
     main()

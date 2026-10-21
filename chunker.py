@@ -1,34 +1,44 @@
 import re
+from itertools import pairwise
 from pathlib import Path
 
-MAX_CHARS = 1000     # about 250 tokens: big enough for a full answer, small enough for one topic
-OVERLAP_CHARS = 200  # how much of the end of a chunk we repeat at the start of the next one
+MAX_CHARS = (
+    1000  # about 250 tokens: big enough for a full answer, small enough for one topic
+)
+OVERLAP_CHARS = (
+    200  # how much of the end of a chunk we repeat at the start of the next one
+)
 
 
 def parse_front_matter(raw: str) -> tuple[dict, str]:
     """Separate the '---' header block (title, type) from the document body."""
     if not raw.startswith("---\n"):
-        return {},raw
-    header,body = raw[4:].split("\n---\n",1)
+        return {}, raw
+    header, body = raw[4:].split("\n---\n", 1)
     meta = {}
     for line in header.splitlines():
-        key,value =line.split(":",1)
-        meta[key.strip()]=value.strip()
-    return meta,body
+        key, value = line.split(":", 1)
+        meta[key.strip()] = value.strip()
+    return meta, body
+
 
 def split_into_sections(body: str) -> list[dict]:
     """Cut the document at every heading. Each section remembers its heading path."""
     sections = []
     headings = []
-    lines =[]
+    lines = []
 
     def close_section():
         text = "\n".join(lines).strip()
         if text:
-            sections.append({
-                "heading_path": " > ".join(headings[1:]),  # [1:] skips the H1, it's the document title
-                "text": text,
-            })
+            sections.append(
+                {
+                    "heading_path": " > ".join(
+                        headings[1:]
+                    ),  # [1:] skips the H1, it's the document title
+                    "text": text,
+                }
+            )
         lines.clear()
 
     for line in body.splitlines():
@@ -36,12 +46,13 @@ def split_into_sections(body: str) -> list[dict]:
             close_section()
             level = len(line) - len(line.lstrip("#"))  # "## Charging" -> 2
             title = line.lstrip("#").strip()
-            del headings[level - 1:]  # going back up? forget the deeper headings
+            del headings[level - 1 :]  # going back up? forget the deeper headings
             headings.append(title)
         else:
             lines.append(line)
     close_section()
     return sections
+
 
 def split_sentences(text: str) -> list[str]:
     """Cut after . ! or ? when a space or newline follows."""
@@ -83,12 +94,15 @@ def chunk_document(body: str) -> list[dict]:
     chunks = []
     for section in split_into_sections(body):
         for piece in split_long_text(section["text"]):
-            chunks.append({
-                "chunk_index": len(chunks),
-                "heading_path": section["heading_path"],
-                "content": piece,
-            })
+            chunks.append(
+                {
+                    "chunk_index": len(chunks),
+                    "heading_path": section["heading_path"],
+                    "content": piece,
+                }
+            )
     return chunks
+
 
 def main():
     total = 0
@@ -98,15 +112,21 @@ def main():
         total += len(chunks)
         print(f"\n{meta['title']}: {len(chunks)} chunks")
         for chunk in chunks:
-            print(f"  #{chunk['chunk_index']:<2} {len(chunk['content']):>5} chars | {chunk['heading_path'] or '(intro)'}")
+            print(
+                f"  #{chunk['chunk_index']:<2} {len(chunk['content']):>5} chars | {chunk['heading_path'] or '(intro)'}"
+            )
 
         # Show where the split sections were cut, to check the overlap with our own eyes.
-        for before, after in zip(chunks, chunks[1:]):
+        for before, after in pairwise(chunks):
             if before["heading_path"] == after["heading_path"]:
-                print(f"\n  --- end of #{before['chunk_index']}: ...{before['content'][-90:]}")
-                print(f"  --- start of #{after['chunk_index']}: {after['content'][:90]}...")
+                print(
+                    f"\n  --- end of #{before['chunk_index']}: ...{before['content'][-90:]}"
+                )
+                print(
+                    f"  --- start of #{after['chunk_index']}: {after['content'][:90]}..."
+                )
     print(f"\nTotal: {total} chunks")
+
 
 if __name__ == "__main__":
     main()
-    
