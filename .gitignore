@@ -11,3 +11,6 @@ wheels/
 
 # Envirment varibale
 .env
+
+# System
+.DS_Store
