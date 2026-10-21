@@ -44,7 +44,8 @@ How to work:
 - Cite every fact with its ref in square brackets, e.g. [warranty-policy#3].
 - If the passages don't contain the answer, say so plainly and suggest contacting Voltway support.
   Never guess prices, numbers or dates.
-- Today's date is {date.today().isoformat()}."""
+- Today's date is {date.today().isoformat()}.
+- Stop searching as soon as the results answer the question."""
 
 
 def run_tool(name: str, arguments: dict) -> list[dict]:

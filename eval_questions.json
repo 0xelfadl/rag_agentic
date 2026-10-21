@@ -1,0 +1,16 @@
+[
+  { "question": "How long does a full charge take?", "document": "v2-owner-manual", "section": "Charging" },
+  { "question": "What does error E12 mean?", "document": "v2-owner-manual", "section": "Display and error codes" },
+  { "question": "How many years is the frame covered?", "document": "warranty-policy", "section": "Coverage periods" },
+  { "question": "Can I return a bike I have already ridden?", "document": "warranty-policy", "section": "Returns" },
+  { "question": "Is the bike waterproof?", "document": "faq", "section": "Can I ride in the rain?" },
+  { "question": "What is the new Eco+ mode?", "document": "firmware-4-2-release-notes", "section": "What's new" },
+  { "question": "How should I keep the battery over the winter?", "document": "v2-owner-manual", "section": "Storage and battery care" },
+  { "question": "Do I need a driving licence for this bike?", "document": "faq", "section": "Do I need a license" },
+  { "question": "How often does the bike need a service?", "document": "v2-owner-manual", "section": "Maintenance schedule" },
+  { "question": "If I sell my bike, does the buyer get the warranty?", "document": "warranty-policy", "section": "Transferring the warranty" },
+  { "question": "Why is assist stuck in Eco after the update?", "document": "firmware-4-2-release-notes", "section": "Known issues" },
+  { "question": "How fast does walk mode push the bike?", "document": "v2-owner-manual", "section": "Assist modes" },
+  { "question": "Should I start in Turbo when carrying a child seat?", "document": "v2-owner-manual", "section": "Riding safely" },
+  { "question": "When do I replace the chain?", "document": "v2-owner-manual", "section": "Maintenance schedule" }
+]
